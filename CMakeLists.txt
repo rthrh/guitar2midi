@@ -18,6 +18,7 @@ set(CMAKE_CXX_STANDARD 14) # C++14
 set(SOURCES
 main.cpp
 utils.cpp
+test.cpp
 )
 
 set(HEADERS
