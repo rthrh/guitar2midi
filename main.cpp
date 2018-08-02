@@ -64,6 +64,8 @@ void PlayAudioCallback(void* userData, Uint8* stream, int streamLength) {
     AudioData* audio = (AudioData*)userData;
     sampData = new Uint8;
 
+
+
     if (audio->fileLength == 0) {
         return;
     }
@@ -86,26 +88,36 @@ void PlayAudioCallback(void* userData, Uint8* stream, int streamLength) {
         out[i] = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
     }
 
+    //feed DFT input data array
+    for(int i=0; i<channels; i++)
+    {
+        for (int j=0; j < length; j++)
+        {
+            in[i][j][0] = stream[j];
+        }
+    }
+
+    //create plans for DFT
     for(int c = 0; c < channels; ++c){
         p[c] = fftw_plan_dft_1d(streamLength, in[c],
                 out[c], FFTW_FORWARD, FFTW_MEASURE);
     }
 
+    //execute DFT
     for(int c = 0; c < channels; ++c){
         fftw_execute(p[c]);
         //std::cout << "exec" << std::endl;
     }
 
 
-    //print 1st channel
-//    for(int c = 0; c < N; ++c){
-//        //std::cout << out[0][c] << std::endl;
-//    }
+   // print 1st channel
+    for(int c = 0; c < N; c++){
+        std::cout << out[0][c][0] << std::endl;
+    }
+
+    //utils::test();
 
 
-    utils::test();
-
-    throw;
 
     audio->filePosition += length;
     audio->fileLength -= length;
