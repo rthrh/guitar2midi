@@ -4,6 +4,7 @@
 #include "SDL2/SDL.h"
 #include "utils.hpp"
 #include "test.cpp"
+#include "maths.hpp"
 #include <fftw3.h>
 
 

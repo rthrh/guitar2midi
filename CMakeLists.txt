@@ -19,10 +19,12 @@ set(SOURCES
 main.cpp
 utils.cpp
 test.cpp
+maths.cpp
 )
 
 set(HEADERS
 utils.hpp
+maths.hpp
 )
 
 add_definitions(-DVERSION="${VERSION_STRING}")
@@ -30,7 +32,7 @@ add_definitions(-DVERSION="${VERSION_STRING}")
 find_package(SDL2 REQUIRED)
 
 
-include_directories(${SDL2_INCLUDE_DIRS})
+
 
 
 

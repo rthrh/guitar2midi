@@ -2,6 +2,7 @@
 #include "utils.hpp"
 #include <iostream>
 #include <fftw3.h>
+#include "maths.hpp"
 
 namespace utils{
     void closeAudio(Uint8 *wavBuffer, SDL_AudioDeviceID deviceId)
@@ -25,7 +26,13 @@ namespace utils{
         int N = 10; //apply nyquist/hermitian?
         int streamLength = N;
 
-        double stream[] = {1,2,3,4,5,6,7,8,9,10};
+        //double stream[] = {1,1,1,1,1,1,1,1,1,1};
+
+        std::vector<double> linspace = maths::linspace(0, M_PI, 10);
+        maths::print_vector(linspace);
+
+        std::vector<double> stream = maths::sinwave(linspace);
+        maths::print_vector(stream);
 
         int channels = 1;
         fftw_complex *in[channels], *out[channels];
