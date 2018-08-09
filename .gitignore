@@ -1,3 +1,5 @@
 build
 res
 CMakeLists.txt.user
+*.py
+*.txt

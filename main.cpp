@@ -6,14 +6,11 @@
 #include "test.cpp"
 #include "maths.hpp"
 #include <fftw3.h>
+#include "sdl_utils.h"
 
 
 
 Uint8* sampData;
-SDL_AudioSpec wavSpec;
-Uint8* wavStart;
-Uint32 wavLength;
-SDL_AudioDeviceID aDevice;
 
 uint globalCounter = 0;
 
@@ -25,32 +22,28 @@ struct AudioData {
 void PlayAudioCallback(void* userData, Uint8* stream, int streamLength);
 
 int main() {
-    SDL_Init(SDL_INIT_AUDIO);
+    sdlPlayer sdl("/home/adpa/guitar2midi/res/sample_1.wav");
 
 
-    // Load .wav file
-    if (SDL_LoadWAV("/home/adpa/guitar2midi/res/sample_1.wav", &wavSpec, &wavStart, &wavLength) == NULL) {
-        std::cerr << "Couldnt load file: "  << std::endl;
-        getchar();
-    }
+
 
     AudioData audio;
-    audio.filePosition = wavStart;
-    audio.fileLength = wavLength;
+    audio.filePosition = sdl.wavStart;
+    audio.fileLength = sdl.wavLength;
 
-    wavSpec.callback = PlayAudioCallback;
-    wavSpec.userdata = &audio;
+    sdl.wavSpec.callback = PlayAudioCallback;
+    sdl.wavSpec.userdata = &audio;
 
     //utils::printWavSpec(wavSpec);
 
     // Open audio playback endpoint
-    aDevice = SDL_OpenAudioDevice(NULL, 0, &wavSpec, NULL, SDL_AUDIO_ALLOW_ANY_CHANGE);
-    if (aDevice == 0) {
+    sdl.aDevice = SDL_OpenAudioDevice(NULL, 0, &sdl.wavSpec, NULL, SDL_AUDIO_ALLOW_ANY_CHANGE);
+    if (sdl.aDevice == 0) {
         std::cerr << "Audio Device connection failed: " << SDL_GetError() << std::endl;
         getchar();
     }
     // Play audio on playback endpoint
-    SDL_PauseAudioDevice(aDevice, 0);
+    SDL_PauseAudioDevice(sdl.aDevice, 0);
 
     // Do nothing while there's still data to be played
     while (audio.fileLength > 0) {
@@ -65,7 +58,6 @@ void PlayAudioCallback(void* userData, Uint8* stream, int streamLength) {
     sampData = new Uint8;
 
 
-
     if (audio->fileLength == 0) {
         return;
     }
@@ -73,7 +65,9 @@ void PlayAudioCallback(void* userData, Uint8* stream, int streamLength) {
     Uint32 length = (Uint32)streamLength;
     length = (length > audio->fileLength ? audio->fileLength : length);
 
+
     SDL_memcpy(stream, audio->filePosition, length);
+//    SDL_memcpy(stream, audio->filePosition, length);
 
 
 
@@ -111,11 +105,22 @@ void PlayAudioCallback(void* userData, Uint8* stream, int streamLength) {
 
 
    // print 1st channel
+    double FFTmax = 0;
+    uint FFTmaxIndex = 0;
     for(int c = 0; c < N; c++){
-        std::cout << out[0][c][0] << std::endl;
+        //std::cout << out[0][c][0] << std::endl;
+        if ((out[0][c][0] > FFTmax) && (c > 0))
+        {
+            FFTmax = out[0][c][0];
+            FFTmaxIndex = c;
+
+        }
+
     }
 
-    //utils::test();
+    std::cout << "FFTmax: " << FFTmax << " FFTmaxIndex: " << FFTmaxIndex << std::endl;
+
+
 
 
 

@@ -20,11 +20,13 @@ main.cpp
 utils.cpp
 test.cpp
 maths.cpp
+sdl_utils.cpp
 )
 
 set(HEADERS
 utils.hpp
 maths.hpp
+sdl_utils.h
 )
 
 add_definitions(-DVERSION="${VERSION_STRING}")
