@@ -23,7 +23,7 @@ fftRunner::fftRunner(uint8_t channelsNum, uint16_t l)
 
 fftRunner::~fftRunner()
 {
-
+ //free menory...
 }
 
 void fftRunner::feedData(uint8_t *stream)

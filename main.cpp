@@ -22,8 +22,6 @@ int main() {
     sdl.playSound();
     sdl.pause(100);
 
-
-
 }
 
 
